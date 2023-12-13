@@ -762,5 +762,5 @@ async def on_ready():
 
 
 
-token="MTEwMDQ0MjQ0NDE3MDAxODkwNg.GZY0Vj.j_eR8OqVFvM27fW3aCZy9Af4qDcBEPZ3p7y4hM"
+token=""
 bot.run(token)
